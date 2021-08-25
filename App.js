@@ -3,49 +3,71 @@ import React, { useState } from 'react';
 import { Text } from 'react-native';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { auth } from './firebase'; 
+import { auth } from './firebase';
 import LoginScreen from './screens/sessions/LoginScreen';
+import RegisterScreen from './screens/sessions/RegisterScreen';
 
 const Stack = createStackNavigator();
+
 export default function App() {
-  const [signedIn, setsignedIn] = useState(false);
-  
-  auth.onAuthStateChanged((use) => {
+  const [signedIn, setSignedIn] = useState(false);
+  auth.onAuthStateChanged((user) => {
     if (user) {
-      setsignedIn(true);
+      setSignedIn(true);
     } else {
-      setsignedIn(false);
+      setSignedIn(false);
     }
   });
-
+  
+  const forFade = ({ current }) => ({
+    cardStyle: {
+      opacity: current.progress,
+      backgroundColor: 'transparent',
+    },
+  });
+  
   return (
     <NavigationContainer theme={DefaultTheme}>
       {signedIn
         ? (
-          <Text>Signed In</Text>
+          <Text>Signed in</Text>
         ) : (
           <>
-          <StatusBar style="light" />
-          <Stack.Navigator
-          mode="card"
-          screenOptions={{}}
-          >
-            <Stack.Screen
-            name="signIn"
-            component={LoginScreen}
-            options={{
-              title: 'Sign In',
-              headerStyle: {
-                backgroundColor: '#29434e',
-                borderBottomColor: '#29434e',
-              },
-              headerTintColor: '#fff'
-            }}/>
+            <StatusBar style="light" />
+            <Stack.Navigator
+              mode="card"
+              screenOptions={{
+              }}
+            >
+              <Stack.Screen
+                name="signIn"
+                component={LoginScreen}
+                options={{
+                  cardStyleInterpolator: forFade,
+                  title: 'Sign in',
+                  headerStyle: {
+                    backgroundColor: '#29434e',
+                    borderBottomColor: '#29434e',
+                  },
+                  headerTintColor: '#fff',
+                }}
+              />
+              <Stack.Screen
+                name="register"
+                component={RegisterScreen}
+                options={{
+                  cardStyleInterpolator: forFade,
+                  title: 'Register',
+                  headerStyle: {
+                    backgroundColor: '#29434e',
+                    borderBottomColor: '#29434e',
+                  },
+                  headerTintColor: '#fff',
+                }}
+              />
             </Stack.Navigator>
-            </>
-        )
-      }
-      </NavigationContainer>
+          </>
+        )}
+    </NavigationContainer>
   );
 }
-
