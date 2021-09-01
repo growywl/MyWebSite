@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { TextInput, Button } from 'react-native-paper';
 import styles from './styles';
+import { auth } from '../../firebase';
 const RegisterScreen = ({ navigation }) => {
   const { 
     control, 
@@ -12,9 +13,15 @@ const RegisterScreen = ({ navigation }) => {
     register} =  useForm();
   const password = useRef({});
   password.current = watch('password', '');
-  const onSubmit = (formData) => {
-    console.log(formData);
+
+  const onSubmit = (data) => {
+    const { email, password } = data;
+    auth
+      .createUserWithEmailAndPassword(
+        email.trim().toLowerCase(), password
+      );
   };
+
   return (
     <View style={styles.authFormContainer}>
       <Controller
