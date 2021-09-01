@@ -1,14 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { Text } from 'react-native';
+import { set } from 'lodash';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { db } from './firebase';
+import { auth } from './firebase'; 
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { auth } from './firebase';
 import LoginScreen from './screens/sessions/LoginScreen';
 import RegisterScreen from './screens/sessions/RegisterScreen';
+import {  SafeAreaView } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { FontAwesome } from '@expo/vector-icons';
+import ShopmindersTab from './screens/ShopmindersTab';
+import SettingsTab from './screens/SettingsTab';
 
 const Stack = createStackNavigator();
-
+const Tab = createBottomTabNavigator();
 export default function App() {
   const [signedIn, setSignedIn] = useState(false);
   auth.onAuthStateChanged((user) => {
@@ -26,6 +33,7 @@ export default function App() {
     },
   });
   
+
   return (
     <NavigationContainer theme={DefaultTheme}>
       {signedIn
@@ -69,5 +77,7 @@ export default function App() {
           </>
         )}
     </NavigationContainer>
+
+    
   );
 }
